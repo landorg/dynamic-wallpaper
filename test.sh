@@ -15,7 +15,7 @@ REDBG="$(printf '\033[41m')"  GREENBG="$(printf '\033[42m')"  ORANGEBG="$(printf
 MAGENTABG="$(printf '\033[45m')"  CYANBG="$(printf '\033[46m')"  WHITEBG="$(printf '\033[47m')" BLACKBG="$(printf '\033[40m')"
 
 ## Wallpaper directory
-DIR="$(dirname $(realpath $0))/images"
+DIR="$(dirname $(realpath $0))"
 HOUR=`date +%k`
 
 ## Wordsplit in ZSH
@@ -55,7 +55,6 @@ Prerequisite() {
 
 ## Usage
 usage() {
-	clear
     cat <<- EOF
 		${RED}╺┳┓╻ ╻┏┓╻┏━┓┏┳┓╻┏━╸   ${GREEN}╻ ╻┏━┓╻  ╻  ┏━┓┏━┓┏━┓┏━╸┏━┓
 		${RED} ┃┃┗┳┛┃┗┫┣━┫┃┃┃┃┃     ${GREEN}┃╻┃┣━┫┃  ┃  ┣━┛┣━┫┣━┛┣╸ ┣┳┛
@@ -73,7 +72,7 @@ usage() {
 		   
 	EOF
 
-	styles=(`ls $DIR`)
+	styles=(`ls $DIR/images`)
 	printf ${GREEN}"Available styles:  "
 	printf -- ${ORANGE}'%s  ' "${styles[@]}"
 	printf -- '\n\n'${WHITE}
@@ -137,7 +136,7 @@ esac
 
 ## Get Image
 get_img() {
-	image="$DIR/$STYLE/$1"
+	image="$DIR/images/$STYLE/$1"
 
 	# get image format
 	if [[ -f "${image}.png" ]]; then
@@ -154,7 +153,7 @@ get_img() {
 pywal_set() {
 	get_img "$1"
 	if [[ -x `command -v wal` ]]; then
-		wal -i "$image.$FORMAT"
+		wal -i "$image.$FORMAT" -o "$DIR/update.sh"
 	else
 		echo -e ${RED}"[!] pywal is not installed on your system, exiting..."
 		{ reset_color; exit 1; }
@@ -182,7 +181,7 @@ set_wallpaper() {
 
 ## Check valid style
 check_style() {
-	styles=(`ls $DIR`)
+	styles=(`ls $DIR/images`)
 	for i in "${styles[@]}"; do
 		if [[ "$i" == "$1" ]]; then
 			echo -e ${BLUE}"[*] Using style : ${MAGENTA}$1"
